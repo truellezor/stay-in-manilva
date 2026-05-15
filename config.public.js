@@ -1,0 +1,1 @@
+window.STAY_IN_MANILVA_SUPABASE = null;
