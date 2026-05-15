@@ -1,5 +1,9 @@
 import { PLACE_IDS } from "./config.js";
-import { dateRange, rangesOverlap } from "./dates.js";
+import { compareDates, dateRange, rangesOverlap } from "./dates.js";
+
+export function activeBookings(bookings, today) {
+  return bookings.filter((booking) => compareDates(booking.endDate, today) >= 0);
+}
 
 export function bookingsForRange(bookings, startDate, endDate) {
   return bookings.filter((booking) =>
