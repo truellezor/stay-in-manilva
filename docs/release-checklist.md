@@ -8,7 +8,8 @@ Run this checklist before publishing a public URL.
 - No checked source file is over 200 lines.
 - Browser booking flow passes locally on desktop and mobile.
 - Browser booking flow passes against the public deployment URL.
-- Production storage performs atomic conflict checks server-side.
+- Production storage performs conflict checks server-side.
+- `BOOKINGS_FILE` points to persistent disk or storage for the deployed host.
 - Admin or owner views are authenticated before launch.
 - Public views avoid exposing unnecessary guest details.
 - Public URL opens from a normal browser session.
