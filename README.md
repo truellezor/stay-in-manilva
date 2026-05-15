@@ -24,7 +24,7 @@ node scripts/verify.js
 node server.js
 ```
 
-Open `http://localhost:4173` after `npm start`.
+Open `http://localhost:4173` after `node server.js`.
 
 ## Architecture
 
