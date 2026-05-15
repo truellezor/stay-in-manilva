@@ -1,6 +1,6 @@
 import test from "node:test";
 import assert from "node:assert/strict";
-import { availablePlaces, availabilityByDate, hasConflict } from "../src/availability.js";
+import { activeBookings, availablePlaces, availabilityByDate, hasConflict } from "../src/availability.js";
 import { makeBooking } from "../src/booking.js";
 
 const now = new Date("2026-05-15T10:00:00.000Z");
@@ -61,4 +61,17 @@ test("summarizes availability by date", () => {
   const summary = availabilityByDate(existing, "2026-05-20", "2026-05-23");
   assert.equal(summary["2026-05-20"].remaining, 3);
   assert.equal(summary["2026-05-23"].remaining, 5);
+});
+
+test("filters bookings that ended before today", () => {
+  const bookings = [
+    { ...existing[0], id: "past", endDate: "2026-05-19" },
+    { ...existing[0], id: "today", endDate: "2026-05-20" },
+    { ...existing[0], id: "future", endDate: "2026-05-21" }
+  ];
+
+  assert.deepEqual(activeBookings(bookings, "2026-05-20").map((booking) => booking.id), [
+    "today",
+    "future"
+  ]);
 });
