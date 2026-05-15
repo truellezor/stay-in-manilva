@@ -34,6 +34,22 @@ The server stores bookings in `data/bookings.sqlite` by default. Override this
 with `BOOKINGS_DB=/path/to/bookings.sqlite` for production. The deployed host
 must keep that SQLite file on persistent disk.
 
+## Public deployment
+
+Deploy the app as a Node web service, not as a static site. The included
+`render.yaml` config creates a Render web service with a persistent disk for
+SQLite at `/opt/render/project/src/data/bookings.sqlite`.
+
+On Render:
+
+1. Create a new Blueprint from this GitHub repository.
+2. Confirm the `stay-in-manilva` service.
+3. Keep the persistent disk enabled.
+4. Open the `.onrender.com` URL Render gives you.
+
+The app must be opened from that deployed URL so `/api/bookings` is available
+to every browser. GitHub Pages cannot run the booking API.
+
 ## Architecture
 
 - `src/config.js`: booking window and capacity constants.
