@@ -1,6 +1,6 @@
 import test from "node:test";
 import assert from "node:assert/strict";
-import { loadSharedBookings, saveSharedBooking } from "../src/shared-storage.js";
+import { deleteSharedBooking, loadSharedBookings, saveSharedBooking } from "../src/shared-storage.js";
 
 test("loads bookings from the shared API", async () => {
   const originalFetch = globalThis.fetch;
@@ -41,6 +41,23 @@ test("saves bookings through the shared API", async () => {
     assert.equal(result.ok, true);
     assert.equal(result.url, "/api/bookings");
     assert.equal(result.method, "POST");
+  } finally {
+    globalThis.fetch = originalFetch;
+  }
+});
+
+test("deletes bookings through the shared API", async () => {
+  const originalFetch = globalThis.fetch;
+  globalThis.fetch = async (url, options) => ({
+    ok: true,
+    json: async () => ({ ok: true, url, method: options.method })
+  });
+
+  try {
+    const result = await deleteSharedBooking("booking 1");
+    assert.equal(result.ok, true);
+    assert.equal(result.url, "/api/bookings/booking%201");
+    assert.equal(result.method, "DELETE");
   } finally {
     globalThis.fetch = originalFetch;
   }
