@@ -5,6 +5,16 @@ import { deleteSharedBooking, loadSharedBookings, saveSharedBooking } from "./sh
 
 const $ = (selector) => document.querySelector(selector);
 
+function escapeHtml(value) {
+  return String(value).replace(/[&<>"']/g, (char) => ({
+    "&": "&amp;",
+    "<": "&lt;",
+    ">": "&gt;",
+    "\"": "&quot;",
+    "'": "&#39;"
+  })[char]);
+}
+
 function placesFromForm() {
   return [...document.querySelectorAll("[name='places']:checked")]
     .map((input) => Number(input.value));
@@ -33,10 +43,15 @@ function renderAvailability(bookings) {
 
 function bookingItem(booking, today) {
   const expired = compareDates(booking.endDate, today) < 0;
+  const beds = booking.places.length === 1 ? `Bed ${booking.places[0]}` : `Beds ${booking.places.join(", ")}`;
+  const status = expired ? "Expired" : beds;
   return `
     <li${expired ? ` data-booking-state="expired"` : ""}>
-      <strong>${booking.startDate} to ${booking.endDate}</strong>
-      <span>${expired ? "Expired" : `${booking.places.length} beds booked`}</span>
+      <div class="booking-main">
+        <strong>${escapeHtml(booking.guestName)}</strong>
+        <span>${booking.startDate} to ${booking.endDate}</span>
+      </div>
+      <span>${status}</span>
       <button class="delete-booking" type="button" data-booking-id="${booking.id}">Delete</button>
     </li>
   `;
@@ -59,7 +74,7 @@ function renderConfirmation(booking) {
   $("#confirmation").innerHTML = `
     <strong>Booking confirmed</strong>
     <dl>
-      <div><dt>Name</dt><dd>${booking.guestName}</dd></div>
+      <div><dt>Name</dt><dd>${escapeHtml(booking.guestName)}</dd></div>
       <div><dt>Period</dt><dd>${booking.startDate} to ${booking.endDate}</dd></div>
       <div><dt>Beds</dt><dd>${booking.places.join(", ")}</dd></div>
     </dl>
