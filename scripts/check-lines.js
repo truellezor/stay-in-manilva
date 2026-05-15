@@ -3,7 +3,7 @@ import { join } from "node:path";
 
 const MAX_LINES = 200;
 const ROOTS = ["src", "test", "scripts", "supabase", "server.js", "index.html", "styles.css"];
-const EXTENSIONS = new Set([".js", ".css", ".html", ".md"]);
+const EXTENSIONS = new Set([".js", ".ts", ".css", ".html", ".md", ".sql"]);
 const failures = [];
 
 function extension(path) {
