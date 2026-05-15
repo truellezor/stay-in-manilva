@@ -8,7 +8,7 @@ for each row
 execute function supabase_functions.http_request(
   'https://pmozhxfnhbsitwkqtyzt.supabase.co/functions/v1/notify-booking',
   'POST',
-  '{"Content-Type":"application/json","x-webhook-key":"replace-with-your-webhook-key"}',
+  '{"Content-Type":"application/json","x-webhook-key":"manilva-email-9Kq7vPz4nR2sL8wX"}',
   '{}',
   '1000'
 );
