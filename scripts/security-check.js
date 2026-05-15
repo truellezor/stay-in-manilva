@@ -1,7 +1,7 @@
 import { readFileSync, readdirSync, statSync } from "node:fs";
 import { join } from "node:path";
 
-const SEARCH_ROOTS = ["src", "scripts", "supabase", "server.js", "index.html"];
+const SEARCH_ROOTS = ["src", "e2e", "scripts", "supabase", "server.js", "index.html"];
 const SECRET_PATTERNS = [/api[_-]?key/i, /secret/i, /password/i, /token/i];
 const findings = [];
 const EXCLUDED = new Set(["scripts\\security-check.js", "scripts/security-check.js"]);
