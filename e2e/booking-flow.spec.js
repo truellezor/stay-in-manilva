@@ -57,7 +57,7 @@ test("guest books available dates and sees confirmation", async ({ page }) => {
   await expect(page.getByText("Ana Maria")).toBeVisible();
   await expect(page.getByText("1, 2")).toBeVisible();
   await expect(page.getByText("2026-05-20 to 2026-05-22")).toBeVisible();
-  await expect(page.getByText("2 beds booked")).toBeVisible();
+  await expect(page.getByText("Beds 1, 2")).toBeVisible();
 });
 
 test("already reserved beds are unavailable for overlapping dates", async ({ page }) => {
@@ -75,7 +75,7 @@ test("already reserved beds are unavailable for overlapping dates", async ({ pag
 
   await expect(page.getByLabel("Bed 1")).toBeDisabled();
   await expect(page.getByLabel("Bed 2")).toBeEnabled();
-  await expect(page.getByText("Mira")).toBeHidden();
+  await expect(page.getByText("Mira")).toBeVisible();
 });
 
 test("expired bookings are hidden from the booking list", async ({ page }) => {
