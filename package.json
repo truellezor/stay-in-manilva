@@ -1,0 +1,13 @@
+{
+  "name": "stay-in-manilva",
+  "version": "0.1.0",
+  "type": "module",
+  "private": true,
+  "scripts": {
+    "start": "node server.js",
+    "test": "node --test test/*.test.js",
+    "coverage": "node --test --experimental-test-coverage --test-coverage-lines=90 --test-coverage-branches=90 --test-coverage-functions=90 test/*.test.js",
+    "check:lines": "node scripts/check-lines.js",
+    "verify": "node scripts/verify.js"
+  }
+}

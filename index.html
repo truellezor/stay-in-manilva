@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Stay in Manilva with Sandu</title>
+    <link rel="stylesheet" href="./styles.css">
+  </head>
+  <body>
+    <main>
+      <section class="hero">
+        <p>Manilva apartment bookings</p>
+        <h1>Stay in Manilva with Sandu</h1>
+      </section>
+
+      <section class="layout">
+        <form id="bookingForm" class="panel">
+          <label>Name <input id="guestName" autocomplete="name" required maxlength="80"></label>
+          <div class="dates">
+            <label>Start <input id="startDate" type="date" required></label>
+            <label>End <input id="endDate" type="date" required></label>
+          </div>
+          <fieldset>
+            <legend>Places</legend>
+            <div id="places" class="places"></div>
+          </fieldset>
+          <button type="submit">Book stay</button>
+          <p id="message" role="status"></p>
+        </form>
+
+        <aside class="panel">
+          <h2>Availability</h2>
+          <ul id="availability" class="stack"></ul>
+          <h2>Bookings</h2>
+          <ul id="bookings" class="stack"></ul>
+        </aside>
+      </section>
+    </main>
+    <script type="module" src="./src/ui.js"></script>
+  </body>
+</html>
