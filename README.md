@@ -36,6 +36,31 @@ must keep that SQLite file on persistent disk.
 
 ## Public deployment
 
+The free production path is Supabase plus any static host. The browser uses
+Supabase directly when `config.public.js` contains a project URL and anon key.
+Without that config, it falls back to the local Node API and SQLite.
+
+### Supabase Free setup
+
+1. Create a Supabase project.
+2. Open SQL Editor and run `supabase/schema.sql`.
+3. Go to Project Settings, API.
+4. Copy Project URL and anon public key.
+5. Update `config.public.js`:
+
+```js
+window.STAY_IN_MANILVA_SUPABASE = {
+  url: "https://your-project.supabase.co",
+  anonKey: "your-public-anon-key"
+};
+```
+
+The anon key is designed to be public. Access is controlled by the Row Level
+Security policies in `supabase/schema.sql`. Because this app is public and has
+no login, anyone with the link can create and delete bookings.
+
+### Render option
+
 Deploy the app as a Node web service, not as a static site. The included
 `render.yaml` config creates a Render web service with a persistent disk for
 SQLite at `/opt/render/project/src/data/bookings.sqlite`.
