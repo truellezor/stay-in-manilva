@@ -2,7 +2,17 @@ import { readdirSync, readFileSync, statSync } from "node:fs";
 import { join } from "node:path";
 
 const MAX_LINES = 200;
-const ROOTS = ["src", "test", "scripts", "supabase", "server.js", "index.html", "styles.css"];
+const ROOTS = [
+  "src",
+  "test",
+  "e2e",
+  "scripts",
+  "supabase",
+  "server.js",
+  "index.html",
+  "styles.css",
+  "playwright.config.js"
+];
 const EXTENSIONS = new Set([".js", ".ts", ".css", ".html", ".md", ".sql"]);
 const failures = [];
 
