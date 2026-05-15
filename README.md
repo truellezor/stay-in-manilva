@@ -8,9 +8,9 @@ Repository: https://github.com/truellezor/stay-in-manilva
 ## Rules
 
 - Guests must enter a name.
-- Guests select a start date, end date, and one or more places.
-- A booking can reserve at most 5 places.
-- A place cannot be double-booked for overlapping dates.
+- Guests select a start date, end date, and one or more beds.
+- A booking can reserve at most 5 beds.
+- A bed cannot be double-booked for overlapping dates.
 - Shared bookings are saved through `POST /api/bookings` when the Node server is used.
 - Source files must stay at or below 200 lines.
 - Unit coverage must stay at or above 90%.
