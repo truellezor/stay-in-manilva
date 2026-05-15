@@ -1,0 +1,18 @@
+services:
+  - type: web
+    name: stay-in-manilva
+    runtime: node
+    plan: starter
+    region: frankfurt
+    buildCommand: npm install
+    startCommand: npm start
+    healthCheckPath: /api/bookings
+    envVars:
+      - key: NODE_VERSION
+        value: 24
+      - key: BOOKINGS_DB
+        value: /opt/render/project/src/data/bookings.sqlite
+    disk:
+      name: bookings-data
+      mountPath: /opt/render/project/src/data
+      sizeGB: 1
