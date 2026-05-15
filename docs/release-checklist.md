@@ -9,7 +9,8 @@ Run this checklist before publishing a public URL.
 - Browser booking flow passes locally on desktop and mobile.
 - Browser booking flow passes against the public deployment URL.
 - Production storage performs conflict checks server-side.
-- `BOOKINGS_FILE` points to persistent disk or storage for the deployed host.
+- `BOOKINGS_DB` points to persistent disk or storage for the deployed host.
+- Deployment uses Node.js 24 or newer for built-in SQLite support.
 - Admin or owner views are authenticated before launch.
 - Public views avoid exposing unnecessary guest details.
 - Public URL opens from a normal browser session.
