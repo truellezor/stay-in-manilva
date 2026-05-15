@@ -1,5 +1,6 @@
 import { PLACE_IDS, BOOKING_END, BOOKING_START } from "./config.js";
 import { availabilityByDate, availablePlaces } from "./availability.js";
+import { compareDates } from "./dates.js";
 import { deleteSharedBooking, loadSharedBookings, saveSharedBooking } from "./shared-storage.js";
 
 const $ = (selector) => document.querySelector(selector);
@@ -49,7 +50,14 @@ function setMessage(message, type = "info") {
   $("#message").dataset.type = type;
 }
 
+function syncDateBounds() {
+  const start = $("#startDate").value || BOOKING_START;
+  $("#endDate").min = start;
+  if (compareDates($("#endDate").value, start) < 0) $("#endDate").value = start;
+}
+
 async function refresh() {
+  syncDateBounds();
   try {
     const bookings = await loadSharedBookings();
     renderPlaces(bookings);
@@ -87,6 +95,7 @@ async function submitBooking(event) {
   event.target.reset();
   $("#startDate").value = BOOKING_START;
   $("#endDate").value = BOOKING_START;
+  syncDateBounds();
   await refresh();
 }
 
@@ -106,10 +115,10 @@ async function deleteBooking(event) {
 export function initBookingApp() {
   $("#startDate").min = BOOKING_START;
   $("#startDate").max = BOOKING_END;
-  $("#endDate").min = BOOKING_START;
   $("#endDate").max = BOOKING_END;
   $("#startDate").value = BOOKING_START;
   $("#endDate").value = BOOKING_START;
+  syncDateBounds();
   $("#bookingForm").addEventListener("submit", submitBooking);
   $("#bookings").addEventListener("click", deleteBooking);
   $("#startDate").addEventListener("change", refresh);
