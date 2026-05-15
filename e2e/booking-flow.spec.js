@@ -74,6 +74,26 @@ test("already reserved beds are unavailable for overlapping dates", async ({ pag
   await expect(page.getByLabel("Bed 2")).toBeEnabled();
 });
 
+test("expired bookings are hidden from the booking list", async ({ page }) => {
+  await page.addInitScript(() => {
+    Date = class extends Date {
+      constructor(...args) {
+        super(...(args.length ? args : ["2026-05-23T10:00:00.000Z"]));
+      }
+      static now() {
+        return new Date("2026-05-23T10:00:00.000Z").getTime();
+      }
+    };
+  });
+  await openApp(page, [
+    apiRow({ id: "past", guestName: "Past", startDate: "2026-05-20", endDate: "2026-05-22", places: [1] }),
+    apiRow({ id: "future", guestName: "Future", startDate: "2026-05-23", endDate: "2026-05-24", places: [2] })
+  ]);
+
+  await expect(page.getByText("2026-05-20 to 2026-05-22")).toBeHidden();
+  await expect(page.getByText("2026-05-23 to 2026-05-24")).toBeVisible();
+});
+
 test("form blocks missing name and invalid date order", async ({ page }) => {
   await openApp(page);
   await page.getByLabel("Start").fill("2026-06-10");
