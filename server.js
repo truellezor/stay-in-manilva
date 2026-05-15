@@ -1,6 +1,7 @@
 import { createReadStream, existsSync } from "node:fs";
 import { createServer } from "node:http";
-import { extname, join, normalize } from "node:path";
+import { extname, join, resolve } from "node:path";
+import { handleApiRequest } from "./src/server-api.js";
 
 const port = Number(process.env.PORT || 4173);
 const root = process.cwd();
@@ -12,11 +13,14 @@ const types = {
 
 function resolvePath(url) {
   const cleanPath = new URL(url, `http://localhost:${port}`).pathname;
-  const filePath = normalize(join(root, cleanPath === "/" ? "index.html" : cleanPath));
+  const requested = cleanPath === "/" ? "index.html" : cleanPath.slice(1);
+  const filePath = resolve(join(root, requested));
   return filePath.startsWith(root) ? filePath : join(root, "index.html");
 }
 
-createServer((request, response) => {
+createServer(async (request, response) => {
+  if (await handleApiRequest(request, response)) return;
+
   const filePath = resolvePath(request.url);
 
   if (!existsSync(filePath)) {
