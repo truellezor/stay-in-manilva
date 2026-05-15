@@ -24,9 +24,11 @@ function renderAvailability(bookings) {
   const start = $("#startDate").value || BOOKING_START;
   const end = $("#endDate").value || start;
   const days = availabilityByDate(bookings, start, end);
-  $("#availability").innerHTML = Object.entries(days).map(([date, state]) =>
-    `<li><strong>${date}</strong><span>${state.remaining} beds left</span></li>`
-  ).join("");
+  $("#availability").innerHTML = Object.entries(days).map(([date, state]) => {
+    const tone = state.remaining === 0 ? "full" : state.remaining === PLACE_IDS.length ? "open" : "partial";
+    const label = state.remaining === 0 ? "Full" : `${state.remaining} beds left`;
+    return `<li data-availability="${tone}"><strong>${date}</strong><span>${label}</span></li>`;
+  }).join("");
 }
 
 function bookingItem(booking) {
@@ -48,6 +50,18 @@ function renderBookings(bookings) {
 function setMessage(message, type = "info") {
   $("#message").textContent = message;
   $("#message").dataset.type = type;
+}
+
+function renderConfirmation(booking) {
+  $("#confirmation").hidden = false;
+  $("#confirmation").innerHTML = `
+    <strong>Booking confirmed</strong>
+    <dl>
+      <div><dt>Name</dt><dd>${booking.guestName}</dd></div>
+      <div><dt>Period</dt><dd>${booking.startDate} to ${booking.endDate}</dd></div>
+      <div><dt>Beds</dt><dd>${booking.places.join(", ")}</dd></div>
+    </dl>
+  `;
 }
 
 function syncDateBounds() {
@@ -97,7 +111,8 @@ async function submitBooking(event) {
     return;
   }
 
-  setMessage(`Booked ${result.booking.places.length} bed(s) for ${result.booking.guestName}.`, "success");
+  setMessage("Booking confirmed.", "success");
+  renderConfirmation(result.booking);
   event.target.reset();
   $("#startDate").value = BOOKING_START;
   $("#endDate").value = BOOKING_START;
