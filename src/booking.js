@@ -17,7 +17,7 @@ export function makeBooking(input, existingBookings, now = new Date()) {
   if (hasConflict(existingBookings, input.startDate, input.endDate, places)) {
     return {
       ok: false,
-      errors: ["One or more selected places are already booked."]
+      errors: ["One or more selected beds are already booked."]
     };
   }
 
