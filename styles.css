@@ -118,6 +118,10 @@ button {
 
 button:hover { background: var(--accent-dark); }
 
+.delete-booking { width: auto; min-height: 34px; background: transparent; color: #b42318; border: 1px solid #e5b7af; padding: 0 10px; }
+
+.delete-booking:hover { background: #fff1ee; }
+
 .dates,
 .places {
   display: grid;
@@ -156,6 +160,7 @@ button:hover { background: var(--accent-dark); }
 
 .stack li {
   display: flex;
+  align-items: center;
   justify-content: space-between;
   gap: 12px;
   border-bottom: 1px solid #eee8da;
