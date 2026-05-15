@@ -8,6 +8,7 @@
 - Booking dates and bed IDs are validated before writes.
 - Double-booking prevention runs in browser code and in a Supabase trigger.
 - Row Level Security allows public read, insert, and delete for bookings.
+- Booking email notifications run in a Supabase Edge Function.
 
 ## Risks Before Public Launch
 
@@ -19,6 +20,7 @@
 ## Required Before Public URL
 
 - Run `supabase/schema.sql` before sharing the public URL.
+- Deploy the `notify-booking` Edge Function and set its secrets.
 - Fill `config.public.js` with the Supabase URL and anon public key.
 - Protect admin routes with authentication.
 - Run dependency and static checks for the chosen stack.
