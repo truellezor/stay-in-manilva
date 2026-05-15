@@ -17,6 +17,8 @@ Repository: https://github.com/truellezor/stay-in-manilva
 
 ## Commands
 
+Requires Node.js 24 or newer for the built-in SQLite module.
+
 ```bash
 node --test test/*.test.js
 node --test --experimental-test-coverage --test-coverage-lines=90 --test-coverage-branches=90 --test-coverage-functions=90 test/*.test.js
@@ -27,8 +29,9 @@ node server.js
 
 Open `http://localhost:4173` after `node server.js`.
 
-The server stores bookings in `data/bookings.json` by default. Override this
-with `BOOKINGS_FILE=/path/to/bookings.json` for production.
+The server stores bookings in `data/bookings.sqlite` by default. Override this
+with `BOOKINGS_DB=/path/to/bookings.sqlite` for production. The deployed host
+must keep that SQLite file on persistent disk.
 
 ## Architecture
 
@@ -39,7 +42,7 @@ with `BOOKINGS_FILE=/path/to/bookings.json` for production.
 - `src/booking.js`: booking creation and conflict checks.
 - `src/storage.js`: browser local storage adapter for the first version.
 - `src/shared-storage.js`: browser adapter for server API with local fallback.
-- `src/server-store.js`: server-side JSON persistence.
+- `src/server-store.js`: server-side SQLite persistence.
 - `src/server-api.js`: HTTP API for shared bookings.
 - `src/ui.js`: browser interaction layer.
 
