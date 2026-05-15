@@ -9,19 +9,28 @@
   <body>
     <main>
       <section class="hero">
-        <p>Manilva apartment bookings</p>
+        <p>Private stay planner</p>
         <h1>Stay in Manilva with Sandu</h1>
+        <div class="hero-meta" aria-label="Booking summary">
+          <span>May 15 - Jun 30</span>
+          <span>5 beds</span>
+          <span>Shared calendar</span>
+        </div>
       </section>
 
       <section class="layout">
         <form id="bookingForm" class="panel">
+          <div class="panel-title">
+            <h2>Book a stay</h2>
+            <p>Select your dates and reserve available beds.</p>
+          </div>
           <label>Name <input id="guestName" autocomplete="name" required maxlength="80"></label>
           <div class="dates">
             <label>Start <input id="startDate" type="date" required></label>
             <label>End <input id="endDate" type="date" required></label>
           </div>
           <fieldset>
-            <legend>Places</legend>
+            <legend>Beds</legend>
             <div id="places" class="places"></div>
           </fieldset>
           <button type="submit">Book stay</button>
@@ -29,7 +38,10 @@
         </form>
 
         <aside class="panel">
-          <h2>Availability</h2>
+          <div class="panel-title">
+            <h2>Availability</h2>
+            <p>Live bed count for the selected date range.</p>
+          </div>
           <ul id="availability" class="stack"></ul>
           <h2>Bookings</h2>
           <ul id="bookings" class="stack"></ul>
