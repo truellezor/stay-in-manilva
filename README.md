@@ -54,6 +54,27 @@ The anon key is designed to be public. Access is controlled by the Row Level
 Security policies in `supabase/schema.sql`. Because this app is public and has
 no login, anyone with the link can create and delete bookings.
 
+### Email notifications
+
+New bookings can send an email through the `notify-booking` Supabase Edge
+Function. It sends the guest name, booking period, and beds to
+`Truellezor@gmail.com`.
+
+1. Create a Resend API key.
+2. Deploy `supabase/functions/notify-booking`.
+3. Set these Supabase Edge Function secrets:
+
+```bash
+RESEND_KEY=your-resend-api-key
+BOOKING_NOTIFY_TO=Truellezor@gmail.com
+BOOKING_NOTIFY_FROM=Stay in Manilva <onboarding@resend.dev>
+BOOKING_NOTIFY_KEY=choose-a-long-random-value
+```
+
+4. Replace `replace-with-your-webhook-key` in
+   `supabase/booking-email-webhook.sql` with the same random value.
+5. Run `supabase/booking-email-webhook.sql` in Supabase SQL Editor.
+
 ## Architecture
 
 - `src/config.js`: booking window and capacity constants.
