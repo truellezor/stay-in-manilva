@@ -12,7 +12,7 @@ Repository: https://github.com/truellezor/stay-in-manilva
 - A booking can reserve at most 5 beds.
 - A bed cannot be double-booked for overlapping dates.
 - Shared bookings are saved in Supabase Free.
-- Source files must stay at or below 200 lines.
+- Source files should stay focused: app code uses a 200-line guard, while tests, HTML, CSS, docs, and SQL have roomier limits.
 - Unit coverage must stay at or above 90%.
 
 ## Commands
