@@ -17,3 +17,9 @@ export async function saveSharedBooking(input) {
     body: JSON.stringify(input)
   });
 }
+
+export async function deleteSharedBooking(id) {
+  return requestJson(`/api/bookings/${encodeURIComponent(id)}`, {
+    method: "DELETE"
+  });
+}
