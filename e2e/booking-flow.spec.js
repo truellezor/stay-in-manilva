@@ -52,7 +52,10 @@ test("guest books available dates and sees confirmation", async ({ page }) => {
   await fillStay(page, "Ana Maria", "2026-05-20", "2026-05-22", [1, 2]);
   await page.getByRole("button", { name: "Book stay" }).click();
 
-  await expect(page.getByRole("status")).toContainText("Booked 2 bed(s) for Ana Maria.");
+  await expect(page.getByRole("status")).toContainText("Booking confirmed.");
+  await expect(page.getByText("Booking confirmed", { exact: true })).toBeVisible();
+  await expect(page.getByText("Ana Maria")).toBeVisible();
+  await expect(page.getByText("1, 2")).toBeVisible();
   await expect(page.getByText("2026-05-20 to 2026-05-22")).toBeVisible();
   await expect(page.getByText("2 beds booked")).toBeVisible();
 });
@@ -72,6 +75,7 @@ test("already reserved beds are unavailable for overlapping dates", async ({ pag
 
   await expect(page.getByLabel("Bed 1")).toBeDisabled();
   await expect(page.getByLabel("Bed 2")).toBeEnabled();
+  await expect(page.getByText("Mira")).toBeHidden();
 });
 
 test("expired bookings are hidden from the booking list", async ({ page }) => {
