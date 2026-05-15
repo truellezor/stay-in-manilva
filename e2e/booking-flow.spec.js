@@ -96,6 +96,10 @@ test("expired bookings are hidden from the booking list", async ({ page }) => {
 
   await expect(page.getByText("2026-05-20 to 2026-05-22")).toBeHidden();
   await expect(page.getByText("2026-05-23 to 2026-05-24")).toBeVisible();
+
+  await page.getByLabel("Show expired").check();
+  await expect(page.getByText("2026-05-20 to 2026-05-22")).toBeVisible();
+  await expect(page.getByText("Expired")).toBeVisible();
 });
 
 test("form blocks missing name and invalid date order", async ({ page }) => {
