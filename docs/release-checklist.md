@@ -8,9 +8,9 @@ Run this checklist before publishing a public URL.
 - No checked source file is over 200 lines.
 - Browser booking flow passes locally on desktop and mobile.
 - Browser booking flow passes against the public deployment URL.
-- Production storage performs conflict checks server-side.
-- `BOOKINGS_DB` points to persistent disk or storage for the deployed host.
-- Deployment uses Node.js 24 or newer for built-in SQLite support.
+- `supabase/schema.sql` has been run in the Supabase project.
+- `config.public.js` contains the production Supabase URL and anon key.
+- Production storage performs conflict checks in the Supabase trigger.
 - Admin or owner views are authenticated before launch.
 - Public views avoid exposing unnecessary guest details.
 - Public URL opens from a normal browser session.
