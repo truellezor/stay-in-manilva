@@ -4,7 +4,7 @@ import { createStoredBooking, readBookings } from "./server-store.js";
 const MAX_BODY_BYTES = 16_384;
 
 export function defaultBookingsFile() {
-  return process.env.BOOKINGS_FILE || join(process.cwd(), "data", "bookings.json");
+  return process.env.BOOKINGS_DB || join(process.cwd(), "data", "bookings.sqlite");
 }
 
 function sendJson(response, status, body) {
