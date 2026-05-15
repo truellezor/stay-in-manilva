@@ -1,5 +1,5 @@
 import { join } from "node:path";
-import { createStoredBooking, readBookings } from "./server-store.js";
+import { createStoredBooking, deleteStoredBooking, readBookings } from "./server-store.js";
 
 const MAX_BODY_BYTES = 16_384;
 
@@ -30,17 +30,27 @@ async function readJsonBody(request) {
 
 export async function handleApiRequest(request, response, file = defaultBookingsFile()) {
   const url = new URL(request.url, "http://localhost");
-  if (url.pathname !== "/api/bookings") return false;
+  if (!url.pathname.startsWith("/api/bookings")) return false;
 
   try {
-    if (request.method === "GET") {
+    if (request.method === "GET" && url.pathname === "/api/bookings") {
       sendJson(response, 200, { bookings: await readBookings(file) });
       return true;
     }
 
-    if (request.method === "POST") {
+    if (request.method === "POST" && url.pathname === "/api/bookings") {
       const result = await createStoredBooking(await readJsonBody(request), file);
       sendJson(response, result.ok ? 201 : 409, result);
+      return true;
+    }
+
+    if (request.method === "DELETE") {
+      const id = decodeURIComponent(url.pathname.replace("/api/bookings/", ""));
+      const result = await deleteStoredBooking(id, file);
+      sendJson(response, result.ok ? 200 : 404, {
+        ...result,
+        errors: result.ok ? [] : ["Booking not found."]
+      });
       return true;
     }
 
