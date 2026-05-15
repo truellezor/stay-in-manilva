@@ -1,6 +1,6 @@
 import { PLACE_IDS, BOOKING_END, BOOKING_START } from "./config.js";
 import { availabilityByDate, availablePlaces } from "./availability.js";
-import { loadSharedBookings, saveSharedBooking } from "./shared-storage.js";
+import { deleteSharedBooking, loadSharedBookings, saveSharedBooking } from "./shared-storage.js";
 import { clearBookings } from "./storage.js";
 
 const $ = (selector) => document.querySelector(selector);
@@ -29,12 +29,20 @@ function renderAvailability(bookings) {
   ).join("");
 }
 
+function bookingItem(booking) {
+  return `
+    <li>
+      <strong>${booking.startDate} to ${booking.endDate}</strong>
+      <span>${booking.places.length} beds booked</span>
+      <button class="delete-booking" type="button" data-booking-id="${booking.id}">Delete</button>
+    </li>
+  `;
+}
+
 function renderBookings(bookings) {
   $("#bookings").innerHTML = bookings.length === 0
     ? "<li>No bookings yet.</li>"
-    : bookings.map((booking) =>
-      `<li><strong>${booking.startDate} to ${booking.endDate}</strong><span>${booking.places.length} beds booked</span></li>`
-    ).join("");
+    : bookings.map(bookingItem).join("");
 }
 
 function setMessage(message, type = "info") {
@@ -83,6 +91,19 @@ async function submitBooking(event) {
   await refresh();
 }
 
+async function deleteBooking(event) {
+  const button = event.target.closest(".delete-booking");
+  if (!button) return;
+
+  try {
+    const result = await deleteSharedBooking(button.dataset.bookingId);
+    setMessage(result.ok ? "Booking deleted." : result.errors.join(" "), result.ok ? "success" : "error");
+    await refresh();
+  } catch {
+    setMessage("Could not delete because shared storage is unavailable.", "error");
+  }
+}
+
 export function initBookingApp() {
   clearBookings();
   $("#startDate").min = BOOKING_START;
@@ -92,6 +113,7 @@ export function initBookingApp() {
   $("#startDate").value = BOOKING_START;
   $("#endDate").value = BOOKING_START;
   $("#bookingForm").addEventListener("submit", submitBooking);
+  $("#bookings").addEventListener("click", deleteBooking);
   $("#startDate").addEventListener("change", refresh);
   $("#endDate").addEventListener("change", refresh);
   refresh();
