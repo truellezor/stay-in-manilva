@@ -9,8 +9,14 @@
   "scripts": {
     "start": "node server.js",
     "test": "node --test test/*.test.js",
+    "test:e2e": "playwright test",
+    "test:e2e:install": "playwright install chromium",
     "coverage": "node --test --experimental-test-coverage --test-coverage-lines=90 --test-coverage-branches=90 --test-coverage-functions=90 test/*.test.js",
     "check:lines": "node scripts/check-lines.js",
-    "verify": "node scripts/verify.js"
+    "verify": "node scripts/verify.js",
+    "verify:release": "node scripts/verify.js && playwright test"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.60.0"
   }
 }
