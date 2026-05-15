@@ -1,6 +1,7 @@
 import { PLACE_IDS, BOOKING_END, BOOKING_START } from "./config.js";
 import { availabilityByDate, availablePlaces } from "./availability.js";
 import { loadSharedBookings, saveSharedBooking } from "./shared-storage.js";
+import { clearBookings } from "./storage.js";
 
 const $ = (selector) => document.querySelector(selector);
 
@@ -42,20 +43,33 @@ function setMessage(message, type = "info") {
 }
 
 async function refresh() {
-  const bookings = await loadSharedBookings();
-  renderPlaces(bookings);
-  renderAvailability(bookings);
-  renderBookings(bookings);
+  try {
+    const bookings = await loadSharedBookings();
+    renderPlaces(bookings);
+    renderAvailability(bookings);
+    renderBookings(bookings);
+  } catch {
+    renderPlaces([]);
+    renderAvailability([]);
+    renderBookings([]);
+    setMessage("Shared booking storage is not connected. Start the Node server or deploy the API.", "error");
+  }
 }
 
 async function submitBooking(event) {
   event.preventDefault();
-  const result = await saveSharedBooking({
-    guestName: $("#guestName").value,
-    startDate: $("#startDate").value,
-    endDate: $("#endDate").value,
-    places: placesFromForm()
-  });
+  let result;
+  try {
+    result = await saveSharedBooking({
+      guestName: $("#guestName").value,
+      startDate: $("#startDate").value,
+      endDate: $("#endDate").value,
+      places: placesFromForm()
+    });
+  } catch {
+    setMessage("Could not save because shared storage is unavailable.", "error");
+    return;
+  }
 
   if (!result.ok) {
     setMessage(result.errors.join(" "), "error");
@@ -70,6 +84,7 @@ async function submitBooking(event) {
 }
 
 export function initBookingApp() {
+  clearBookings();
   $("#startDate").min = BOOKING_START;
   $("#startDate").max = BOOKING_END;
   $("#endDate").min = BOOKING_START;
