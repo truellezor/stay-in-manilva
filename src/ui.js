@@ -1,5 +1,5 @@
 import { PLACE_IDS, BOOKING_END, BOOKING_START } from "./config.js";
-import { availabilityByDate, availablePlaces } from "./availability.js";
+import { activeBookings, availabilityByDate, availablePlaces } from "./availability.js";
 import { compareDates } from "./dates.js";
 import { deleteSharedBooking, loadSharedBookings, saveSharedBooking } from "./shared-storage.js";
 
@@ -56,10 +56,16 @@ function syncDateBounds() {
   if (compareDates($("#endDate").value, start) < 0) $("#endDate").value = start;
 }
 
+function todayIso() {
+  const today = new Date();
+  const local = new Date(today.getTime() - today.getTimezoneOffset() * 60_000);
+  return local.toISOString().slice(0, 10);
+}
+
 async function refresh() {
   syncDateBounds();
   try {
-    const bookings = await loadSharedBookings();
+    const bookings = activeBookings(await loadSharedBookings(), todayIso());
     renderPlaces(bookings);
     renderAvailability(bookings);
     renderBookings(bookings);
