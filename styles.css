@@ -9,7 +9,7 @@
   --ink: #24211d;
   --accent: #116a63;
   --accent-dark: #0d514c;
-  --hero-photo: url("https://commons.wikimedia.org/wiki/Special:Redirect/file/Puerto_de_la_Duquesa.JPG?width=1600");
+  --hero-photo: url("https://upload.wikimedia.org/wikipedia/commons/5/5e/Puerto_de_la_Duquesa.JPG");
 }
 
 * {
@@ -19,7 +19,7 @@
 body {
   margin: 0;
   background:
-    linear-gradient(180deg, rgba(16, 40, 43, 0.34), rgba(247, 243, 236, 0.84) 460px, #f7f3ec 760px),
+    linear-gradient(180deg, rgba(16, 40, 43, 0.2), rgba(247, 243, 236, 0.72) 520px, #f7f3ec 820px),
     var(--hero-photo) center top / cover fixed,
     #f7f3ec;
 }
