@@ -41,9 +41,9 @@ export function validateDates(startDate, endDate) {
 
 export function validatePlaces(places) {
   const normalized = normalizePlaces(places);
-  if (normalized.length === 0) return "Select at least one place.";
+  if (normalized.length === 0) return "Select at least one bed.";
   if (normalized.length > PLACE_IDS.length) {
-    return `Select no more than ${PLACE_IDS.length} places.`;
+    return `Select no more than ${PLACE_IDS.length} beds.`;
   }
   return "";
 }
