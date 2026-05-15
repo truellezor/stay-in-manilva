@@ -1,20 +1,19 @@
 import test from "node:test";
 import assert from "node:assert/strict";
-import { mkdir, mkdtemp, rm } from "node:fs/promises";
+import { mkdtemp, rm } from "node:fs/promises";
 import { join } from "node:path";
 import { tmpdir } from "node:os";
-import { createStoredBooking, readBookings, writeBookings } from "../src/server-store.js";
+import { createStoredBooking, readBookings } from "../src/server-store.js";
 
 const now = new Date("2026-05-15T10:00:00.000Z");
 
-async function tempFile() {
+async function tempDb() {
   const dir = await mkdtemp(join(tmpdir(), "manilva-"));
-  await mkdir(dir, { recursive: true });
-  return { dir, file: join(dir, "bookings.json") };
+  return { dir, file: join(dir, "bookings.sqlite") };
 }
 
-test("reads empty booking file when missing", async () => {
-  const { dir, file } = await tempFile();
+test("reads empty bookings from a new SQLite database", async () => {
+  const { dir, file } = await tempDb();
   try {
     assert.deepEqual(await readBookings(file), []);
   } finally {
@@ -22,18 +21,27 @@ test("reads empty booking file when missing", async () => {
   }
 });
 
-test("writes and reads bookings", async () => {
-  const { dir, file } = await tempFile();
+test("creates and reads a stored booking", async () => {
+  const { dir, file } = await tempDb();
   try {
-    await writeBookings(file, [{ id: "1", places: [1] }]);
-    assert.deepEqual(await readBookings(file), [{ id: "1", places: [1] }]);
+    await createStoredBooking({
+      guestName: "Ana",
+      startDate: "2026-05-20",
+      endDate: "2026-05-22",
+      places: [1, 2]
+    }, file, now);
+
+    const bookings = await readBookings(file);
+    assert.equal(bookings.length, 1);
+    assert.equal(bookings[0].guestName, "Ana");
+    assert.deepEqual(bookings[0].places, [1, 2]);
   } finally {
     await rm(dir, { recursive: true, force: true });
   }
 });
 
-test("creates stored bookings and blocks conflicts", async () => {
-  const { dir, file } = await tempFile();
+test("blocks conflicting bookings without saving failed attempts", async () => {
+  const { dir, file } = await tempDb();
   try {
     const first = await createStoredBooking({
       guestName: "Ana",
