@@ -2,25 +2,24 @@
 
 ## Current Implementation
 
-- Runs with a Node booking API when deployed on a server.
-- Falls back to local storage only when the API is unavailable.
-- No secrets are required or stored.
+- Runs as a static browser app backed by Supabase Free.
+- Uses the public Supabase anon key; no private service key is stored.
 - Guest names are trimmed and length-limited before saving.
-- Booking dates and place IDs are validated before server writes.
-- Double-booking prevention runs before each server save.
+- Booking dates and bed IDs are validated before writes.
+- Double-booking prevention runs in browser code and in a Supabase trigger.
+- Row Level Security allows public read, insert, and delete for bookings.
 
 ## Risks Before Public Launch
 
-- SQLite storage is simple and durable for a single Node server.
-- High traffic or multiple server instances need a database with atomic writes.
-- The deployed host must keep the SQLite file on persistent disk.
+- Anyone with the public URL can create and delete bookings.
 - Admin views must be authenticated before exposing all guest details.
 - Guest names are personal data and should not be shown unnecessarily.
-- Public write endpoints need rate limiting or abuse protection.
+- Public writes may need rate limiting or a simple shared access code.
 
 ## Required Before Public URL
 
-- Move from SQLite to a managed database before multi-instance scaling.
+- Run `supabase/schema.sql` before sharing the public URL.
+- Fill `config.public.js` with the Supabase URL and anon public key.
 - Protect admin routes with authentication.
 - Run dependency and static checks for the chosen stack.
 - Run browser automation against the deployed URL.
