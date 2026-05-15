@@ -8,6 +8,7 @@ Run this checklist before publishing a public URL.
 - No checked source file is over 200 lines.
 - Browser booking flow passes locally on desktop and mobile.
 - Browser booking flow passes against the public deployment URL.
+- `npm run verify:release` passes before sharing the URL.
 - `supabase/schema.sql` has been run in the Supabase project.
 - `supabase/booking-email-webhook.sql` has been run with the real webhook key.
 - `notify-booking` Edge Function is deployed with Resend secrets.
