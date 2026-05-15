@@ -31,20 +31,22 @@ function renderAvailability(bookings) {
   }).join("");
 }
 
-function bookingItem(booking) {
+function bookingItem(booking, today) {
+  const expired = compareDates(booking.endDate, today) < 0;
   return `
-    <li>
+    <li${expired ? ` data-booking-state="expired"` : ""}>
       <strong>${booking.startDate} to ${booking.endDate}</strong>
-      <span>${booking.places.length} beds booked</span>
+      <span>${expired ? "Expired" : `${booking.places.length} beds booked`}</span>
       <button class="delete-booking" type="button" data-booking-id="${booking.id}">Delete</button>
     </li>
   `;
 }
 
-function renderBookings(bookings) {
+function renderBookings(bookings, today) {
+  const visible = $("#showExpired").checked ? bookings : activeBookings(bookings, today);
   $("#bookings").innerHTML = bookings.length === 0
     ? "<li>No bookings yet.</li>"
-    : bookings.map(bookingItem).join("");
+    : visible.map((booking) => bookingItem(booking, today)).join("") || "<li>No active bookings.</li>";
 }
 
 function setMessage(message, type = "info") {
@@ -79,10 +81,12 @@ function todayIso() {
 async function refresh() {
   syncDateBounds();
   try {
-    const bookings = activeBookings(await loadSharedBookings(), todayIso());
-    renderPlaces(bookings);
-    renderAvailability(bookings);
-    renderBookings(bookings);
+    const today = todayIso();
+    const bookings = await loadSharedBookings();
+    const active = activeBookings(bookings, today);
+    renderPlaces(active);
+    renderAvailability(active);
+    renderBookings(bookings, today);
   } catch {
     renderPlaces([]);
     renderAvailability([]);
@@ -142,6 +146,7 @@ export function initBookingApp() {
   syncDateBounds();
   $("#bookingForm").addEventListener("submit", submitBooking);
   $("#bookings").addEventListener("click", deleteBooking);
+  $("#showExpired").addEventListener("change", refresh);
   $("#startDate").addEventListener("change", refresh);
   $("#endDate").addEventListener("change", refresh);
   refresh();
