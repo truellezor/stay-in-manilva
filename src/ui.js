@@ -1,7 +1,6 @@
 import { PLACE_IDS, BOOKING_END, BOOKING_START } from "./config.js";
 import { availabilityByDate, availablePlaces } from "./availability.js";
-import { makeBooking } from "./booking.js";
-import { appendBooking, loadBookings } from "./storage.js";
+import { loadSharedBookings, saveSharedBooking } from "./shared-storage.js";
 
 const $ = (selector) => document.querySelector(selector);
 
@@ -42,34 +41,32 @@ function setMessage(message, type = "info") {
   $("#message").dataset.type = type;
 }
 
-function refresh() {
-  const bookings = loadBookings();
+async function refresh() {
+  const bookings = await loadSharedBookings();
   renderPlaces(bookings);
   renderAvailability(bookings);
   renderBookings(bookings);
 }
 
-function submitBooking(event) {
+async function submitBooking(event) {
   event.preventDefault();
-  const bookings = loadBookings();
-  const result = makeBooking({
+  const result = await saveSharedBooking({
     guestName: $("#guestName").value,
     startDate: $("#startDate").value,
     endDate: $("#endDate").value,
     places: placesFromForm()
-  }, bookings);
+  });
 
   if (!result.ok) {
     setMessage(result.errors.join(" "), "error");
     return;
   }
 
-  appendBooking(result.booking);
   setMessage(`Booked ${result.booking.places.length} place(s) for ${result.booking.guestName}.`, "success");
   event.target.reset();
   $("#startDate").value = BOOKING_START;
   $("#endDate").value = BOOKING_START;
-  refresh();
+  await refresh();
 }
 
 export function initBookingApp() {
