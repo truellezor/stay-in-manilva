@@ -91,3 +91,22 @@ export async function createStoredBooking(input, file, now = new Date()) {
     db.close();
   }
 }
+
+export async function deleteStoredBooking(id, file) {
+  await mkdir(dirname(file), { recursive: true });
+  const db = openDatabase(file);
+  try {
+    db.exec("BEGIN IMMEDIATE");
+    db.prepare("DELETE FROM booking_places WHERE bookingId = ?").run(id);
+    const result = db.prepare("DELETE FROM bookings WHERE id = ?").run(id);
+    db.exec("COMMIT");
+    return { ok: result.changes > 0 };
+  } catch (error) {
+    try {
+      db.exec("ROLLBACK");
+    } catch {}
+    throw error;
+  } finally {
+    db.close();
+  }
+}
