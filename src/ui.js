@@ -15,7 +15,7 @@ function renderPlaces(bookings) {
   const available = new Set(availablePlaces(bookings, start, end));
   $("#places").innerHTML = PLACE_IDS.map((place) => {
     const disabled = available.has(place) ? "" : "disabled";
-    return `<label><input type="checkbox" name="places" value="${place}" ${disabled}> Place ${place}</label>`;
+    return `<label><input type="checkbox" name="places" value="${place}" ${disabled}> Bed ${place}</label>`;
   }).join("");
 }
 
@@ -24,7 +24,7 @@ function renderAvailability(bookings) {
   const end = $("#endDate").value || start;
   const days = availabilityByDate(bookings, start, end);
   $("#availability").innerHTML = Object.entries(days).map(([date, state]) =>
-    `<li><strong>${date}</strong><span>${state.remaining} places left</span></li>`
+    `<li><strong>${date}</strong><span>${state.remaining} beds left</span></li>`
   ).join("");
 }
 
@@ -32,7 +32,7 @@ function renderBookings(bookings) {
   $("#bookings").innerHTML = bookings.length === 0
     ? "<li>No bookings yet.</li>"
     : bookings.map((booking) =>
-      `<li><strong>${booking.startDate} to ${booking.endDate}</strong><span>${booking.places.length} places booked</span></li>`
+      `<li><strong>${booking.startDate} to ${booking.endDate}</strong><span>${booking.places.length} beds booked</span></li>`
     ).join("");
 }
 
@@ -62,7 +62,7 @@ async function submitBooking(event) {
     return;
   }
 
-  setMessage(`Booked ${result.booking.places.length} place(s) for ${result.booking.guestName}.`, "success");
+  setMessage(`Booked ${result.booking.places.length} bed(s) for ${result.booking.guestName}.`, "success");
   event.target.reset();
   $("#startDate").value = BOOKING_START;
   $("#endDate").value = BOOKING_START;
