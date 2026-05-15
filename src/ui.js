@@ -1,7 +1,6 @@
 import { PLACE_IDS, BOOKING_END, BOOKING_START } from "./config.js";
 import { availabilityByDate, availablePlaces } from "./availability.js";
 import { deleteSharedBooking, loadSharedBookings, saveSharedBooking } from "./shared-storage.js";
-import { clearBookings } from "./storage.js";
 
 const $ = (selector) => document.querySelector(selector);
 
@@ -60,7 +59,7 @@ async function refresh() {
     renderPlaces([]);
     renderAvailability([]);
     renderBookings([]);
-    setMessage("Shared booking storage is not connected. Start the Node server or deploy the API.", "error");
+    setMessage("Supabase storage is not configured yet.", "error");
   }
 }
 
@@ -75,7 +74,7 @@ async function submitBooking(event) {
       places: placesFromForm()
     });
   } catch {
-    setMessage("Could not save because shared storage is unavailable.", "error");
+    setMessage("Could not save because Supabase is unavailable.", "error");
     return;
   }
 
@@ -100,12 +99,11 @@ async function deleteBooking(event) {
     setMessage(result.ok ? "Booking deleted." : result.errors.join(" "), result.ok ? "success" : "error");
     await refresh();
   } catch {
-    setMessage("Could not delete because shared storage is unavailable.", "error");
+    setMessage("Could not delete because Supabase is unavailable.", "error");
   }
 }
 
 export function initBookingApp() {
-  clearBookings();
   $("#startDate").min = BOOKING_START;
   $("#startDate").max = BOOKING_END;
   $("#endDate").min = BOOKING_START;
