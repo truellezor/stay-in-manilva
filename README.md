@@ -11,6 +11,7 @@ Repository: https://github.com/truellezor/stay-in-manilva
 - Guests select a start date, end date, and one or more places.
 - A booking can reserve at most 5 places.
 - A place cannot be double-booked for overlapping dates.
+- Shared bookings are saved through `POST /api/bookings` when the Node server is used.
 - Source files must stay at or below 200 lines.
 - Unit coverage must stay at or above 90%.
 
@@ -26,6 +27,9 @@ node server.js
 
 Open `http://localhost:4173` after `node server.js`.
 
+The server stores bookings in `data/bookings.json` by default. Override this
+with `BOOKINGS_FILE=/path/to/bookings.json` for production.
+
 ## Architecture
 
 - `src/config.js`: booking window and capacity constants.
@@ -34,7 +38,10 @@ Open `http://localhost:4173` after `node server.js`.
 - `src/availability.js`: capacity and available-place calculation.
 - `src/booking.js`: booking creation and conflict checks.
 - `src/storage.js`: browser local storage adapter for the first version.
+- `src/shared-storage.js`: browser adapter for server API with local fallback.
+- `src/server-store.js`: server-side JSON persistence.
+- `src/server-api.js`: HTTP API for shared bookings.
 - `src/ui.js`: browser interaction layer.
 
-Public deployment and production storage are tracked in Linear as follow-up
-stories because public write access needs security review before launch.
+Public deployment still needs a Node-capable host. GitHub Pages can serve the
+static UI but cannot run the booking API.
