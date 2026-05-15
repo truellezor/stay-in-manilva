@@ -11,14 +11,13 @@ Repository: https://github.com/truellezor/stay-in-manilva
 - Guests select a start date, end date, and one or more beds.
 - A booking can reserve at most 5 beds.
 - A bed cannot be double-booked for overlapping dates.
-- Shared bookings are saved through `POST /api/bookings` when the Node server is used.
-- Existing bookings can be removed through `DELETE /api/bookings/:id`.
+- Shared bookings are saved in Supabase Free.
 - Source files must stay at or below 200 lines.
 - Unit coverage must stay at or above 90%.
 
 ## Commands
 
-Requires Node.js 24 or newer for the built-in SQLite module.
+Requires Node.js 20 or newer for local checks.
 
 ```bash
 node --test test/*.test.js
@@ -28,17 +27,13 @@ node scripts/verify.js
 node server.js
 ```
 
-Open `http://localhost:4173` after `node server.js`.
-
-The server stores bookings in `data/bookings.sqlite` by default. Override this
-with `BOOKINGS_DB=/path/to/bookings.sqlite` for production. The deployed host
-must keep that SQLite file on persistent disk.
+Open `http://localhost:4173` after `node server.js`. Local booking writes need
+`config.public.js` to contain Supabase credentials.
 
 ## Public deployment
 
-The free production path is Supabase plus any static host. The browser uses
+The production path is Supabase Free plus any static host. The browser uses
 Supabase directly when `config.public.js` contains a project URL and anon key.
-Without that config, it falls back to the local Node API and SQLite.
 
 ### Supabase Free setup
 
@@ -59,22 +54,6 @@ The anon key is designed to be public. Access is controlled by the Row Level
 Security policies in `supabase/schema.sql`. Because this app is public and has
 no login, anyone with the link can create and delete bookings.
 
-### Render option
-
-Deploy the app as a Node web service, not as a static site. The included
-`render.yaml` config creates a Render web service with a persistent disk for
-SQLite at `/opt/render/project/src/data/bookings.sqlite`.
-
-On Render:
-
-1. Create a new Blueprint from this GitHub repository.
-2. Confirm the `stay-in-manilva` service.
-3. Keep the persistent disk enabled.
-4. Open the `.onrender.com` URL Render gives you.
-
-The app must be opened from that deployed URL so `/api/bookings` is available
-to every browser. GitHub Pages cannot run the booking API.
-
 ## Architecture
 
 - `src/config.js`: booking window and capacity constants.
@@ -82,11 +61,5 @@ to every browser. GitHub Pages cannot run the booking API.
 - `src/validation.js`: guest and booking input validation.
 - `src/availability.js`: capacity and available-place calculation.
 - `src/booking.js`: booking creation and conflict checks.
-- `src/storage.js`: browser local storage adapter for the first version.
-- `src/shared-storage.js`: browser adapter for server API with local fallback.
-- `src/server-store.js`: server-side SQLite persistence.
-- `src/server-api.js`: HTTP API for shared bookings.
+- `src/shared-storage.js`: browser adapter for Supabase REST.
 - `src/ui.js`: browser interaction layer.
-
-Public deployment still needs a Node-capable host. GitHub Pages can serve the
-static UI but cannot run the booking API.
