@@ -12,7 +12,7 @@ test("cleans and validates guest names", () => {
 test("normalizes and validates places", () => {
   assert.deepEqual(normalizePlaces([2, "1", 2, 8]), [1, 2]);
   assert.equal(validatePlaces([1]), "");
-  assert.equal(validatePlaces([]), "Select at least one place.");
+  assert.equal(validatePlaces([]), "Select at least one bed.");
 });
 
 test("validates date selections", () => {
