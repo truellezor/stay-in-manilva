@@ -25,10 +25,24 @@ node --test --experimental-test-coverage --test-coverage-lines=90 --test-coverag
 node scripts/check-lines.js
 node scripts/verify.js
 node server.js
+npm run test:e2e
+npm run verify:release
 ```
 
 Open `http://localhost:4173` after `node server.js`. Local booking writes need
 `config.public.js` to contain Supabase credentials.
+
+Install browser automation once before running E2E tests:
+
+```bash
+npm install
+npm run test:e2e:install
+```
+
+`npm run test:e2e` runs desktop and mobile booking flows against localhost.
+Set `E2E_BASE_URL=https://your-public-url` to run the same suite against a
+public deployment. Supabase calls are mocked in the browser so E2E runs do not
+create real bookings or send email notifications.
 
 ## Public deployment
 
