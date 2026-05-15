@@ -3,7 +3,7 @@ import assert from "node:assert/strict";
 import { mkdtemp, rm } from "node:fs/promises";
 import { join } from "node:path";
 import { tmpdir } from "node:os";
-import { createStoredBooking, readBookings } from "../src/server-store.js";
+import { createStoredBooking, deleteStoredBooking, readBookings } from "../src/server-store.js";
 
 const now = new Date("2026-05-15T10:00:00.000Z");
 
@@ -59,6 +59,24 @@ test("blocks conflicting bookings without saving failed attempts", async () => {
     assert.equal(first.ok, true);
     assert.equal(second.ok, false);
     assert.equal((await readBookings(file)).length, 1);
+  } finally {
+    await rm(dir, { recursive: true, force: true });
+  }
+});
+
+test("deletes existing bookings and reports missing bookings", async () => {
+  const { dir, file } = await tempDb();
+  try {
+    const created = await createStoredBooking({
+      guestName: "Ana",
+      startDate: "2026-05-20",
+      endDate: "2026-05-20",
+      places: [1]
+    }, file, now);
+
+    assert.equal((await deleteStoredBooking(created.booking.id, file)).ok, true);
+    assert.equal((await readBookings(file)).length, 0);
+    assert.equal((await deleteStoredBooking("missing", file)).ok, false);
   } finally {
     await rm(dir, { recursive: true, force: true });
   }
