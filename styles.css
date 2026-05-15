@@ -162,17 +162,22 @@ button:hover { background: var(--accent-dark); }
 
 .stack span { color: var(--muted); text-align: right; }
 
+.stack [data-availability="full"] span { color: #b42318; font-weight: 800; }
+.stack [data-availability="partial"] span { color: #9a5b00; font-weight: 800; }
+.stack [data-availability="open"] span { color: #047857; }
+.confirmation { border: 1px solid #b9dfd3; border-radius: 8px; background: #effaf6; color: #113f38; margin-top: 14px; padding: 14px; }
+.confirmation dl { display: grid; gap: 8px; margin: 10px 0 0; }
+.confirmation div { display: flex; justify-content: space-between; gap: 12px; }
+.confirmation dt { color: #4d675f; font-weight: 700; }
+.confirmation dd { margin: 0; text-align: right; }
+
 .photo-credit { color: rgba(36, 33, 29, 0.72); font-size: 0.78rem; margin-top: 18px; }
 
 .photo-credit a { color: inherit; }
 
-#message[data-type="error"] {
-  color: #b42318;
-}
+#message[data-type="error"] { color: #b42318; }
 
-#message[data-type="success"] {
-  color: #047857;
-}
+#message[data-type="success"] { color: #047857; }
 
 @media (max-width: 780px) {
   main {
