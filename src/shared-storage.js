@@ -1,14 +1,9 @@
 import { makeBooking } from "./booking.js";
 
 function supabaseConfig() {
-  return globalThis.STAY_IN_MANILVA_SUPABASE;
-}
-
-async function requestJson(url, options) {
-  const response = await fetch(url, options);
-  const body = await response.json();
-  if (!response.ok && !body.errors) throw new Error("Request failed.");
-  return body;
+  const config = globalThis.STAY_IN_MANILVA_SUPABASE;
+  if (!config?.url || !config?.anonKey) throw new Error("Supabase is not configured.");
+  return config;
 }
 
 function toBooking(row) {
@@ -44,9 +39,7 @@ async function loadSupabaseBookings() {
 }
 
 export async function loadSharedBookings() {
-  if (supabaseConfig()) return loadSupabaseBookings();
-  const body = await requestJson("/api/bookings");
-  return Array.isArray(body.bookings) ? body.bookings : [];
+  return loadSupabaseBookings();
 }
 
 async function saveSupabaseBooking(input) {
@@ -75,20 +68,10 @@ async function saveSupabaseBooking(input) {
 }
 
 export async function saveSharedBooking(input) {
-  if (supabaseConfig()) return saveSupabaseBooking(input);
-  return requestJson("/api/bookings", {
-    method: "POST",
-    headers: { "content-type": "application/json" },
-    body: JSON.stringify(input)
-  });
+  return saveSupabaseBooking(input);
 }
 
 export async function deleteSharedBooking(id) {
-  if (supabaseConfig()) {
-    await requestSupabase(`bookings?id=eq.${encodeURIComponent(id)}`, { method: "DELETE" });
-    return { ok: true, errors: [] };
-  }
-  return requestJson(`/api/bookings/${encodeURIComponent(id)}`, {
-    method: "DELETE"
-  });
+  await requestSupabase(`bookings?id=eq.${encodeURIComponent(id)}`, { method: "DELETE" });
+  return { ok: true, errors: [] };
 }
