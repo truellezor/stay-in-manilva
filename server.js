@@ -1,7 +1,6 @@
 import { createReadStream, existsSync } from "node:fs";
 import { createServer } from "node:http";
 import { extname, join, resolve } from "node:path";
-import { handleApiRequest } from "./src/server-api.js";
 
 const port = Number(process.env.PORT || 4173);
 const root = process.cwd();
@@ -19,8 +18,6 @@ function resolvePath(url) {
 }
 
 createServer(async (request, response) => {
-  if (await handleApiRequest(request, response)) return;
-
   const filePath = resolvePath(request.url);
 
   if (!existsSync(filePath)) {
